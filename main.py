@@ -4,10 +4,30 @@ import timm
 import faiss
 import numpy as np
 import cv2
+import os 
+import zipfile
+import urllib.request
 from PIL import Image
 from torchvision import transforms
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+ASSETS_DIR = "patchcore_assets"
+ZIP_PATH = "patchcore_assets.zip"
+
+ZIP_URL = "https://huggingface.co/KiriRR/patchcore-assets/resolve/main/patchcore_assets.zip"
+
+def setup_assets():
+    if not os.path.exists(ASSETS_DIR):
+        st.info("Downloading PatchCore assets")
+        urllib.request.urlretrieve(ZIP_URL, ZIP_PATH)
+
+        with zipfile.ZipFile(ZIP_PATH, "r") as zip_ref:
+            zip_ref.extractall(".")
+
+        os.remove(ZIP_PATH)
+
+setup_assets()
 
 IMG_SIZE = 224
 BACKBONE_NAME = "resnet18"
